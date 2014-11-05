@@ -12,7 +12,7 @@ CHAR {printf("type:CHAR");}
 STR {printf("type:STR");}
 FLOAT {printf("type:FLOAT");}
 CONST {printf("type:CONST");}
-{var}{printf("variable :");ECHO;}
+{var} {printf("variable :");ECHO;}
 {sep}
 \n {nb_ligne++;printf("\n");}
 . {printf("Erreur lexical à la ligne %d",nb_ligne);ECHO;}
