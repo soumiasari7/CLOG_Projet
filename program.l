@@ -1,5 +1,5 @@
 %{
-int nb_ligne=0;
+int nb_ligne=1;
 %}
 chiffre0[0-9]
 chiffre1[1-9]
@@ -7,7 +7,7 @@ lettre[a-zA-Z]
 idf {lettre}({lettre}|{chiffre0}|_)*
 type INTEGRE|FLOAT|CHAR|STR|CONST
 valint "-"?{chiffre1}{chiffre0}*|0
-valrel "-|+"?({chiffre1}{chiffre0}*|0)"."{chiffre0}*{chiffre1}
+valrel "+|-"?."("?.({chiffre1}{chiffre0}*|0)"."{chiffre0}*{chiffre1}")"?
 sep[;:]
 %%
 {type} {printf("type:");ECHO;}
