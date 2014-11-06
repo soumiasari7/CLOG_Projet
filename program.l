@@ -11,9 +11,15 @@ valrel "+|-"?."("?.({chiffre1}{chiffre0}*|0)"."{chiffre0}*{chiffre1}")"?
 varchar '.'
 varstr \"(.)*\"
 com (.)*"//"(.)*
+oparth [-+*/]
+oplog AND|OR|NOT
+opcomp G|L|GE|LE|EQ|DI
 sep[;:]
 %%
 {type} {printf("type:");ECHO;}
+{oparth} {printf("Opérateur arithmétique: ");ECHO;}
+{oplog} {printf("Opérateur logique: ");ECHO;}
+{opcomp} {printf("Opérateur de comparaison: ");ECHO;}
 {valint} {if((atoi(yytext)<=32767)&&(atoi(yytext)>=-32768)) {printf("Valeur entière:");ECHO;}
 else printf("Erreur Lexical: valeur entière erronée");}
 {valrel} {printf("Valeur réel");ECHO;}
@@ -25,6 +31,7 @@ else printf("Erreur Lexical: valeur entière erronée");}
        else printf("Erreur lexical:IDF trop long");
        }
 {com} {printf("Ceci est un commentaire ");}       
-{sep}
+{sep} 
 \n {nb_ligne++;printf("\n");}
 . {printf("Erreur lexical à la ligne %d",nb_ligne);ECHO;}
+
