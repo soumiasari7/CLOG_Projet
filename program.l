@@ -5,7 +5,7 @@ chiffre0[0-9]
 chiffre1[1-9]
 lettre[a-zA-Z]
 idf {lettre}({lettre}|{chiffre0}|_)*
-type INTEGER|FLOAT|CHAR|STR|CONST|VECTOR
+mc INTEGER|FLOAT|CHAR|STR|CONST|VECTOR|READ|DISPLAY|IF|ELSE|END|FOR|
 valint "-"?."("?({chiffre1}{chiffre0}*|0)")"?
 valrel "+|-"?."("?.({chiffre1}{chiffre0}*|0)"."{chiffre0}*{chiffre1}")"?
 varchar '.'
@@ -15,9 +15,12 @@ oparth [-+*/]
 oplog AND|OR|NOT
 opcomp G|L|GE|LE|EQ|DI
 sdf[$%#&]
-sep[;:]
+sep[;:| ]
+cro \[\]
+aro @
+affect =
 %%
-{type} {printf("type:");ECHO;}
+{mc} {printf("Mot Clè: ");ECHO;}
 {oparth} {printf("Opérateur arithmétique: ");ECHO;}
 {oplog} {printf("Opérateur logique: ");ECHO;}
 {opcomp} {printf("Opérateur de comparaison: ");ECHO;}
@@ -32,8 +35,10 @@ else printf("Erreur Lexical: valeur entière erronée");}
 {idf} {if (yyleng<=8) {printf("variable :");ECHO;}
        else printf("Erreur lexical:IDF trop long");
        }
-{com} {printf("Ceci est un commentaire ");}       
+{com} {printf("Ceci est un commentaire: ");}
+{cro} {printf("des crochets: ");ECHO;}
+{aro} {printf("arobase: ");ECHO;}
+{affect} {printf("affectation: ");ECHO;}
 {sep} 
 \n {nb_ligne++;printf("\n");}
 . {printf("Erreur lexical à la ligne %d",nb_ligne);ECHO;}
-
