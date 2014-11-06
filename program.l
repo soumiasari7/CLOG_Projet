@@ -14,12 +14,14 @@ com (.)*"//"(.)*
 oparth [-+*/]
 oplog AND|OR|NOT
 opcomp G|L|GE|LE|EQ|DI
+sdf[$%#&]
 sep[;:]
 %%
 {type} {printf("type:");ECHO;}
 {oparth} {printf("Opérateur arithmétique: ");ECHO;}
 {oplog} {printf("Opérateur logique: ");ECHO;}
 {opcomp} {printf("Opérateur de comparaison: ");ECHO;}
+{sdf} {printf("signe de formatage: ");ECHO;}
 {valint} {if((atoi(yytext)<=32767)&&(atoi(yytext)>=-32768)) {printf("Valeur entière:");ECHO;}
 else printf("Erreur Lexical: valeur entière erronée");}
 {valrel} {printf("Valeur réel");ECHO;}
