@@ -19,25 +19,30 @@ cro "["|"]"
 aro @
 affect =
 %%
-{mc} {printf("Mot Clè: ");ECHO;}
+{mc} {printf("Mot Clé: ");ECHO;}
 {oparth} {printf("Opérateur arithmétique: ");ECHO;}
 {oplog} {printf("Opérateur logique: ");ECHO;}
 {opcomp} {printf("Opérateur de comparaison: ");ECHO;}
 {sdf} {printf("signe de formatage: ");ECHO;}
 {valint} {if((atoi(yytext)<=32767)&&(atoi(yytext)>=-32768)) {printf("Valeur entière: ");ECHO;}
-else printf("Erreur Lexical: valeur entière erronée ");}
+          else{ printf("Erreur Lexical: valeur entière erronée ---> ");ECHO;
+	         printf("\n");
+	       }
+         }
 {valrel} {printf("Valeur réel: ");ECHO;}
 {varchar} {printf("Variable de type char: ");ECHO;}
 {varstr} {printf ("Une chaine de caractère: ");ECHO;}
 "{" {printf("Accolade:Ouvrante ");}
 "}" {printf("Accolade:Fermante ");}
-{idf} {if (yyleng<=8) {printf("Idantifiateur: ");ECHO;}
-       else printf("Erreur lexical:IDF trop long ");
+{idf} {if (yyleng<=8) {printf("Identificateur: ");ECHO;}
+       else {printf("Erreur lexical:IDF trop long ---> ");ECHO;
+	      printf("\n");
+	     }
        }
 {com} {printf("Ceci est un commentaire: ");ECHO:}
-{cro} {printf("des crochets: ");ECHO;}
-{aro} {printf("arobase: ");ECHO;}
-{affect} {printf("affectation: ");ECHO;}
+{cro} {printf("Des crochets: ");ECHO;}
+{aro} {printf("Arobase: ");ECHO;}
+{affect} {printf("Affectation: ");ECHO;}
 {sep} 
 \n {nb_ligne++;printf("\n");}
-. {printf("Erreur lexical à la ligne %d",nb_ligne);ECHO;}
+. {printf("Erreur lexical à la ligne %d ",nb_ligne);ECHO;printf("\n");}
