@@ -3,8 +3,7 @@ int nb_ligne=1;
 %}
 chiffre0[0-9]
 chiffre1[1-9]
-lettre[a-zA-Z]
-idf {lettre}({lettre}|{chiffre0}|_)*
+idf [A-Z]([a-z]|{chiffre0}|_)*
 mc INTEGER|FLOAT|CHAR|STR|CONST|VECTOR|READ|DISPLAY|IF|ELSE|END|FOR
 valint "-"?."("?({chiffre1}{chiffre0}*|0)")"?
 valrel "+|-"?."("?.({chiffre1}{chiffre0}*|0)"."{chiffre0}*{chiffre1}")"?
@@ -32,7 +31,7 @@ else printf("Erreur Lexical: valeur entière erronée ");}
 {varstr} {printf ("Une chaine de caractère: ");ECHO;}
 "{" {printf("Accolade:Ouvrante ");}
 "}" {printf("Accolade:Fermante ");}
-{idf} {if (yyleng<=8) {printf("variable: ");ECHO;}
+{idf} {if (yyleng<=8) {printf("Idantifiateur: ");ECHO;}
        else printf("Erreur lexical:IDF trop long ");
        }
 {com} {printf("Ceci est un commentaire: ");ECHO:}
