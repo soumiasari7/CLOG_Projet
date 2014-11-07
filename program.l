@@ -5,8 +5,8 @@ chiffre0[0-9]
 chiffre1[1-9]
 idf [A-Z]([a-z]|{chiffre0}|_)*
 mc INTEGER|FLOAT|CHAR|STR|CONST|VECTOR|READ|DISPLAY|IF|ELSE|END|FOR
-valint "-"?."("?({chiffre1}{chiffre0}*|0)")"?
-valrel "+|-"?."("?.({chiffre1}{chiffre0}*|0)"."{chiffre0}*{chiffre1}")"?
+valint "("?"-"?({chiffre1}{chiffre0}*|0)")"?
+valrel [(]?[+-]?({chiffre1}{chiffre0}*|0)"."({chiffre0}*)")"?
 varchar '.'
 varstr \"(.)*\"
 com "//"(.)*
