@@ -5,12 +5,12 @@ chiffre0[0-9]
 chiffre1[1-9]
 lettre[a-zA-Z]
 idf {lettre}({lettre}|{chiffre0}|_)*
-mc INTEGER|FLOAT|CHAR|STR|CONST|VECTOR|READ|DISPLAY|IF|ELSE|END|FOR|
+mc INTEGER|FLOAT|CHAR|STR|CONST|VECTOR|READ|DISPLAY|IF|ELSE|END|FOR
 valint "-"?."("?({chiffre1}{chiffre0}*|0)")"?
 valrel "+|-"?."("?.({chiffre1}{chiffre0}*|0)"."{chiffre0}*{chiffre1}")"?
 varchar '.'
 varstr \"(.)*\"
-com (.)*"//"(.)*
+com "//"(.)*
 oparth [-+*/]
 oplog AND|OR|NOT
 opcomp G|L|GE|LE|EQ|DI
