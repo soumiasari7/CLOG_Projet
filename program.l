@@ -15,8 +15,8 @@ oparth [-+*/]
 oplog AND|OR|NOT
 opcomp G|L|GE|LE|EQ|DI
 sdf[$%#&]
-sep[;:| ]
-cro \[\]
+sep[,;:| ]
+cro "["|"]"
 aro @
 affect =
 %%
@@ -25,17 +25,17 @@ affect =
 {oplog} {printf("Opérateur logique: ");ECHO;}
 {opcomp} {printf("Opérateur de comparaison: ");ECHO;}
 {sdf} {printf("signe de formatage: ");ECHO;}
-{valint} {if((atoi(yytext)<=32767)&&(atoi(yytext)>=-32768)) {printf("Valeur entière:");ECHO;}
-else printf("Erreur Lexical: valeur entière erronée");}
-{valrel} {printf("Valeur réel");ECHO;}
+{valint} {if((atoi(yytext)<=32767)&&(atoi(yytext)>=-32768)) {printf("Valeur entière: ");ECHO;}
+else printf("Erreur Lexical: valeur entière erronée ");}
+{valrel} {printf("Valeur réel: ");ECHO;}
 {varchar} {printf("Variable de type char: ");ECHO;}
 {varstr} {printf ("Une chaine de caractère: ");ECHO;}
 "{" {printf("Accolade:Ouvrante ");}
 "}" {printf("Accolade:Fermante ");}
-{idf} {if (yyleng<=8) {printf("variable :");ECHO;}
-       else printf("Erreur lexical:IDF trop long");
+{idf} {if (yyleng<=8) {printf("variable: ");ECHO;}
+       else printf("Erreur lexical:IDF trop long ");
        }
-{com} {printf("Ceci est un commentaire: ");}
+{com} {printf("Ceci est un commentaire: ");ECHO:}
 {cro} {printf("des crochets: ");ECHO;}
 {aro} {printf("arobase: ");ECHO;}
 {affect} {printf("affectation: ");ECHO;}
