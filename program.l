@@ -1,4 +1,5 @@
 %{
+#include "program.tab.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,8 +63,8 @@ int i=0;
 printf("___________________________________________________________________\n");
 }
 %}
-chiffre0[0-9]
-chiffre1[1-9]
+chiffre0 [0-9]
+chiffre1 [1-9]
 idf [A-Z]([a-z]|{chiffre0})*
 mc INTEGER|FLOAT|CHAR|STR|CONST|VECTOR|READ|DISPLAY|IF|ELSE|END|FOR
 valint "("?"-"?({chiffre1}{chiffre0}*|0)")"?
@@ -83,6 +84,7 @@ affect =
 %%
 {mc} { char code[20]="mc_"; strcat(code,yytext);
 inserer(yytext,code);
+return(strcat(code,yytext));
 }
 {oparth} {inserer(yytext,strdup(yytext)); }
 {oplog} {inserer(yytext,strdup(yytext)); }
