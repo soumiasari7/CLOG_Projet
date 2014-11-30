@@ -66,9 +66,11 @@ printf("___________________________________________________________________\n");
 
 chiffre0[0-9]
 idf [A-Z]([a-z]|{chiffre0})*
-
-
 %%
+INTEGER {inserer(yytext,"mc_INTEGER"); return mc_INTEGER; }
+FLOAT {inserer(yytext,"mc_FLOAT"); return mc_FLOAT;}
+CHAR {inserer(yytext,"mc_CHAR"); return mc_CHAR;}
+STRING {inserer(yytext,"mc_STRING"); return mc_STRING;}
 {idf} {if (yyleng<=8) {inserer(yytext,"IDF");return idf; }
        else {printf("Erreur lexical:IDF trop long ---> ");ECHO;
 	      printf("\n");
@@ -76,5 +78,6 @@ idf [A-Z]([a-z]|{chiffre0})*
        }
 "{" {inserer(yytext,strdup(yytext)); return yytext[0];}
 "}" {inserer(yytext,strdup(yytext)); return yytext[0];}
+[;:] return yytext[0] ;
 [ \t\n]       
 . printf("erreur lexicale :entité non reconnu");
