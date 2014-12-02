@@ -79,5 +79,6 @@ STRING {inserer(yytext,"mc_STRING"); return mc_STRING;}
 "{" {inserer(yytext,strdup(yytext)); return yytext[0];}
 "}" {inserer(yytext,strdup(yytext)); return yytext[0];}
 [;:] return yytext[0] ;
+"|" return yytext[0] ;
 [ \t\n]       
 . printf("erreur lexicale :entité non reconnu");
