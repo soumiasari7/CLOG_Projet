@@ -3,15 +3,15 @@
 #include <stdlib.h>
 #include <string.h>
 %}
-%token idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR '{' '}' ';' ':' 
+%token idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR '{' '}' ';' ':' '|'
 %%
-s:idf '{' '{' ListeDeDeclaration '}' '{'  '}' {printf("Syntaxe correcte \n");}
+s:idf '{' '{' ListeDeDeclaration '}' '{'  '}' '}' { printf ("programme syntaxiquement juste"); YYACCEPT;}
 ;
-ListeDeDeclaration: ListeDeDeclaration DeclarationVar |
+ListeDeDeclaration: TYPE ':' Listeparam ';' ListeDeDeclaration | TYPE ':' Listeparam ';'
 ;
-DeclarationVar: type ':' idf ';'
+Listeparam: Listeparam '|' idf | idf
 ;
-type: mc_STRING | mc_INTEGER | mc_FLOAT | mc_CHAR
+TYPE: mc_STRING | mc_INTEGER | mc_FLOAT | mc_CHAR
 ;
 %%
 main()
