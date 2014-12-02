@@ -67,8 +67,10 @@ chiffre0 [0-9]
 chiffre1 [1-9]
 idf [A-Z]([a-z]|{chiffre0})*
 mc INTEGER|FLOAT|CHAR|STR|CONST|VECTOR|READ|DISPLAY|IF|ELSE|END|FOR
-valint "("?"-"?({chiffre1}{chiffre0}*|0)")"?
-valrel [(]?[+-]?({chiffre1}{chiffre0}*|0)"."({chiffre0}*)")"?
+valint ({chiffre1}{chiffre0}*|0)
+valints "([+-]"({chiffre1}{chiffre0}*)")"|0
+valrel ({chiffre1}{chiffre0}*|0)"."({chiffre0}*)
+valrels "([+-]"({chiffre1}{chiffre0}*|0)"."({chiffre0}*)")"
 varchar '.'
 varstr \"(.)*\"
 com "//"(.)*
@@ -90,12 +92,18 @@ return(strcat(code,yytext));
 {oplog} {inserer(yytext,strdup(yytext)); }
 {opcomp} {inserer(yytext,strdup(yytext)); }
 {sdf} {inserer(yytext,strdup(yytext)); }
+{valrels} {inserer(yytext,"valeur real"); }
+{valrel} {inserer(yytext,"valeur real"); }
+{valints} {if((atoi(yytext)<=32767)&&(atoi(yytext)>=-32768)) {inserer(yytext,"valeur int"); }
+          else{ printf("Erreur Lexical: valeur entière erronée ---> ");ECHO;
+	         printf("\n");
+	       }
+         }
 {valint} {if((atoi(yytext)<=32767)&&(atoi(yytext)>=-32768)) {inserer(yytext,"valeur int"); }
           else{ printf("Erreur Lexical: valeur entière erronée ---> ");ECHO;
 	         printf("\n");
 	       }
          }
-{valrel} {inserer(yytext,"valeur real"); }
 {varchar} {inserer(yytext,"un caractère"); }
 {varstr} {inserer(yytext,"une chaine de caractère"); }
 "{" {inserer(yytext,strdup(yytext)); }
