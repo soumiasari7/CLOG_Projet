@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 %}
-%token idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST valreal valint valchar valstr affectaion '{' '}' '[' ']' ';' ':' '|' ','
+%token idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST valreal valint valchar valstr affectaion '{' '}' '[' ']' ';' ':' '|' ',' '-' '+' '*' '/'
 %%
-s:idf '{' '{' ListeDeDeclaration '}' '{'  '}' '}' { printf ("programme syntaxiquement juste"); YYACCEPT;}
+s:idf '{' '{' ListeDeDeclaration '}' '{' PartieCode '}' '}' { printf ("programme syntaxiquement juste"); YYACCEPT;}
 ;
 ListeDeDeclaration : DeclarationVarSimple| DeclarationTab| DeclarationConst 
 ;
@@ -20,6 +20,17 @@ DeclarationConst: mc_CONST ':' idf affectaion Valeur ';' DeclarationConst ListeD
 TYPE: mc_STRING | mc_INTEGER | mc_FLOAT | mc_CHAR
 ;
 Valeur: valreal | valint | valchar | valstr
+;
+PartieCode: Affectation /* | ES | CondIF | Boucle */
+;
+Affectation:idf affectaion Expression ';' | idf affectaion Valeur ';' | idf affectaion idf ';'
+;
+Expression: Somme | Div /* | Soustraction | Multiplication */
+;
+/* je ne pas trait tout les cas comme:idf + valint ..... */
+Somme: idf '+' idf | valint '+' valint | valreal '+' valreal 
+;
+Div: idf '/' idf | valint '/' valint | valreal '/' valreal 
 ;
 %%
 main()

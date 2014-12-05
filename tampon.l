@@ -72,6 +72,7 @@ varchar '.'
 varstr \"(.)*\"
 affect =
 idf [A-Z]([a-z]|{chiffre0})*
+oparth [-+*/]
 %%
 INTEGER {inserer(yytext,"mc_INTEGER"); return mc_INTEGER; }
 FLOAT {inserer(yytext,"mc_FLOAT"); return mc_FLOAT;}
@@ -102,6 +103,7 @@ CONST {inserer(yytext,"mc_CONST"); return mc_CONST;}
 "}" {inserer(yytext,strdup(yytext)); return yytext[0];}
 "[" {inserer(yytext,strdup(yytext));return yytext[0]; }
 "]" {inserer(yytext,strdup(yytext));return yytext[0]; }
+{oparth} {inserer(yytext,strdup(yytext)); return yytext[0];}
 [;:,] return yytext[0] ;
 "|" return yytext[0] ;
 {affect} {inserer(yytext,strdup(yytext)); return affectaion;}
