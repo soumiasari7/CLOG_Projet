@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 %}
-%token idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST valreal valint valchar valstr affectaion '{' '}' '[' ']' ';' ':' '|' ',' '-' '+' '*' '/'
+%token idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST valreal valint valchar valstr affectaion '{' '}' '[' ']' ';' ':' '|' ',' '-' '+' '*' '/' '(' ')'
 %%
 s:idf '{' '{' ListeDeDeclaration '}' '{' PartieCode '}' '}' { printf ("programme syntaxiquement juste"); YYACCEPT;}
 ;
@@ -21,16 +21,34 @@ TYPE: mc_STRING | mc_INTEGER | mc_FLOAT | mc_CHAR
 ;
 Valeur: valreal | valint | valchar | valstr
 ;
-PartieCode: Affectation /* | ES | CondIF | Boucle */
+PartieCode : PartieCode Inst | Inst
+;
+Inst:Affectation  /*|| ES  CondIF | Boucle */ 
 ;
 Affectation:idf affectaion Expression ';' | idf affectaion Valeur ';' | idf affectaion idf ';'
 ;
-Expression: Somme | Div /* | Soustraction | Multiplication */
+Expression: Somme| Div | Soustraction | Multiplication 
 ;
-/* je ne pas trait tout les cas comme:idf + valint ..... */
-Somme: idf '+' idf | valint '+' valint | valreal '+' valreal 
+
+/* je ne pas trait tout les cas comme:valreal+ valint ..... */
+
+Somme:  '('Somme')'
+	   | valint '+' valint 
+	   | valreal '+' valreal 
+	   | idf '+' idf 
+	   | idf '+' valint 
+	   | idf '+' valreal 
+	   | valint '+' idf 
+	   | valreal '+' idf 
+	   | valreal '+' Somme 
+	   | valint '+' Somme 
+	   | idf '+' Somme 
 ;
-Div: idf '/' idf | valint '/' valint | valreal '/' valreal 
+Div: idf '/' idf | valint '/' valint | valreal '/' valreal |idf '/' valint | idf '/' valreal | valint '/' idf | valreal '/' idf 
+;
+Soustraction: idf '-' idf | valint '-' valint | valreal '-' valreal |idf '-' valint | idf '-' valreal | valint '-' idf | valreal '-' idf 
+;
+Multiplication: idf '*' idf | valint '*' valint | valreal '*' valreal |idf '*' valint | idf '*' valreal | valint '*' idf | valreal '*' idf
 ;
 %%
 main()
