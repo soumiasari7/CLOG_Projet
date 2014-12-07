@@ -103,6 +103,8 @@ CONST {inserer(yytext,"mc_CONST"); return mc_CONST;}
 "}" {inserer(yytext,strdup(yytext)); return yytext[0];}
 "[" {inserer(yytext,strdup(yytext));return yytext[0]; }
 "]" {inserer(yytext,strdup(yytext));return yytext[0]; }
+"(" {inserer(yytext,strdup(yytext));return yytext[0]; }
+")" {inserer(yytext,strdup(yytext));return yytext[0]; }
 {oparth} {inserer(yytext,strdup(yytext)); return yytext[0];}
 [;:,] return yytext[0] ;
 "|" return yytext[0] ;
