@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 %}
-%token idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST valreal valint valchar valstr affectaion '{' '}' '[' ']' ';' ':' '|' ',' '-' '+' '*' '/' '(' ')'
+%left '+' '*' '-' '/'
+%token idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST valreal valint valints valchar valstr  affectaion '(' ')' '*' '/' '-' '+' '{' '}' '[' ']' ';' ':' '|' ','   
 %%
 s:idf '{' '{' ListeDeDeclaration '}' '{' PartieCode '}' '}' { printf ("programme syntaxiquement juste"); YYACCEPT;}
 ;
+/*=================partie déclaration =======================*/
 ListeDeDeclaration : DeclarationVarSimple| DeclarationTab| DeclarationConst 
 ;
 DeclarationVarSimple : TYPE ':' Listeparam ';' DeclarationVarSimple ListeDeDeclaration | TYPE ':' Listeparam ';'
@@ -19,37 +21,26 @@ DeclarationConst: mc_CONST ':' idf affectaion Valeur ';' DeclarationConst ListeD
 ;
 TYPE: mc_STRING | mc_INTEGER | mc_FLOAT | mc_CHAR
 ;
-Valeur: valreal | valint | valchar | valstr
+Valeur: valreal | valint | valchar | valstr |valints |idf
 ;
+/*=================partie code =======================*/
 PartieCode : PartieCode Inst | Inst
 ;
 Inst:Affectation  /*|| ES  CondIF | Boucle */ 
 ;
-Affectation:idf affectaion Expression ';' | idf affectaion Valeur ';' | idf affectaion idf ';'
+Affectation:idf affectaion Expression ';'
 ;
-Expression: Somme| Div | Soustraction | Multiplication 
+Expression: Somme Soust
+;
+Soust:'+' Somme Soust|'-' Somme Soust|
+;
+Somme:Div Mul
+;
+Mul:'*' Div Mul |'/' Div Mul|
+;
+Div:'('Expression ')' | Valeur
 ;
 
-/* je ne pas trait tout les cas comme:valreal+ valint ..... */
-
-Somme:  '('Somme')'
-	   | valint '+' valint 
-	   | valreal '+' valreal 
-	   | idf '+' idf 
-	   | idf '+' valint 
-	   | idf '+' valreal 
-	   | valint '+' idf 
-	   | valreal '+' idf 
-	   | valreal '+' Somme 
-	   | valint '+' Somme 
-	   | idf '+' Somme 
-;
-Div: idf '/' idf | valint '/' valint | valreal '/' valreal |idf '/' valint | idf '/' valreal | valint '/' idf | valreal '/' idf 
-;
-Soustraction: idf '-' idf | valint '-' valint | valreal '-' valreal |idf '-' valint | idf '-' valreal | valint '-' idf | valreal '-' idf 
-;
-Multiplication: idf '*' idf | valint '*' valint | valreal '*' valreal |idf '*' valint | idf '*' valreal | valint '*' idf | valreal '*' idf
-;
 %%
 main()
 {
