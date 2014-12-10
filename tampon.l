@@ -65,9 +65,9 @@ printf("___________________________________________________________________\n");
 chiffre0[0-9]
 chiffre1 [1-9]
 valint ({chiffre1}{chiffre0}*|0)
-valints "([+-]"({chiffre1}{chiffre0}*)")"|0
+valints "(-"({chiffre1}{chiffre0}*)")"
 valrel ({chiffre1}{chiffre0}*|0)"."({chiffre0}*)
-valrels "([+-]"({chiffre1}{chiffre0}*|0)"."({chiffre0}*)")"
+valrels "(-"({chiffre1}{chiffre0}*|0)"."({chiffre0}*)")"
 varchar '.'
 varstr \"(.)*\"
 affect =
