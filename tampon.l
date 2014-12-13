@@ -61,7 +61,6 @@ int i=0;
 printf("___________________________________________________________________\n");
 }
 %}  
-
 chiffre0[0-9]
 chiffre1 [1-9]
 valint ({chiffre1}{chiffre0}*|0)
@@ -73,13 +72,28 @@ varstr \"(.)*\"
 affect =
 idf [A-Z]([a-z]|{chiffre0})*
 oparth [-+*/]
+sdf[$%#&]
 %%
+G {inserer(yytext,"mc_G"); return mc_G;}
+L {inserer(yytext,"mc_L"); return mc_L;}
+GE {inserer(yytext,"mc_GE"); return mc_GE;}
+LE {inserer(yytext,"mc_LE"); return mc_LE;}
+EQ {inserer(yytext,"mc_EQ"); return mc_EQ;}
+DI {inserer(yytext,"mc_DI"); return mc_DI;}
+IF {inserer(yytext,"mc_IF"); return mc_IF;}
+ELSE {inserer(yytext,"mc_ELSE"); return mc_ELSE;}
+END {inserer(yytext,"mc_END"); return mc_END;}
 INTEGER {inserer(yytext,"mc_INTEGER"); return mc_INTEGER; }
 FLOAT {inserer(yytext,"mc_FLOAT"); return mc_FLOAT;}
 CHAR {inserer(yytext,"mc_CHAR"); return mc_CHAR;}
 STRING {inserer(yytext,"mc_STRING"); return mc_STRING;}
 VECTOR {inserer(yytext,"mc_VECTOR"); return mc_VECTOR;}
 CONST {inserer(yytext,"mc_CONST"); return mc_CONST;}
+READ {inserer(yytext,"mc_READ"); return mc_READ;}
+DISPLAY {inserer(yytext,"mc_DISPLAY"); return mc_DISPLAY;}
+FOR {inserer(yytext,"mc_FOR"); return mc_FOR;}
+
+
 {idf} {if (yyleng<=8) {inserer(yytext,"IDF");return idf; }
        else {printf("Erreur lexical:IDF trop long ---> ");ECHO;
 	      printf("\n");
@@ -106,8 +120,11 @@ CONST {inserer(yytext,"mc_CONST"); return mc_CONST;}
 "(" {inserer(yytext,strdup(yytext));return yytext[0]; }
 ")" {inserer(yytext,strdup(yytext));return yytext[0]; }
 {oparth} {inserer(yytext,strdup(yytext)); return yytext[0];}
+{sdf} {inserer(yytext,strdup(yytext)); return yytext[0];}
 [;:,] return yytext[0] ;
 "|" return yytext[0] ;
+"@" return yytext[0] ;
+\" return yytext[0] ;
 {affect} {inserer(yytext,strdup(yytext)); return affectaion;}
 [ \t\n]       
 . printf("erreur lexicale :entité non reconnu");
