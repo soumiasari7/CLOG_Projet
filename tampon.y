@@ -4,7 +4,7 @@
 #include <string.h>
 %}
 %left '+' '*' '-' '/'
-%token mc_IF mc_ELSE mc_END mc_G mc_L mc_GE mc_LE mc_EQ mc_DI idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST mc_READ mc_DISPLAY mc_FOR valreal valint valints valchar valstr  affectaion '(' ')' '*' '/' '-' '+' '{' '}' '[' ']' ';' ':' '|' ',' '$' '%' '#' '&' '@' '"'  
+%token dollar dieze ecom prcent mc_IF mc_ELSE mc_END mc_G mc_L mc_GE mc_LE mc_EQ mc_DI mc_NOT mc_AND mc_OR idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST mc_READ mc_DISPLAY mc_FOR valreal valint valints valchar valstr  affectaion '(' ')' '*' '/' '-' '+' '{' '}' '[' ']' ';' ':' '|' ',' '$' '%' '#' '&' '@' '"'  
 %%
 s:idf '{' '{' ListeDeDeclaration '}' '{' PartieCode '}' '}' { printf ("programme syntaxiquement juste"); YYACCEPT;}
 ;
@@ -24,11 +24,11 @@ TYPE: mc_STRING | mc_INTEGER | mc_FLOAT | mc_CHAR
 Valeur: valreal | valint | valchar | valstr |valints |idf
 ;
 /*=================partie code =======================*/
-PartieCode : Affectation | ES | CondIF | Boucle 
+PartieCode : Affectation | ES | CondIF | Boucle |
 ;
  
 /*========Affectation==========*/
-Affectation:idf affectaion Expression ';' Affectation PartieCode | idf affectaion Expression ';'
+Affectation:idf affectaion Expression ';' PartieCode 
 ;
 Expression: Somme Soust
 ;
@@ -41,25 +41,29 @@ Mul:'*' Div Mul |'/' Div Mul|
 Div:'('Expression ')' | Valeur
 ;
 /*========ES==========*/
-ES: Entree ES PartieCode| Sortie ES PartieCode | Entree | Sortie 
+ES: Entree PartieCode| Sortie PartieCode  
 ;
-Entree:  mc_READ '(' '"' SDF '"' ':' '@' idf ')' ';' 
+Entree:  mc_READ '(' SDF ':' '@' idf ')' ';' 
 ;
-Sortie: mc_DISPLAY '(' '"' valstr SDF '"' ':' idf ')' ';'
+Sortie: mc_DISPLAY '('  valstr ':' idf ')' ';'
 ;
-SDF: '$' |'%'| '#'| '&'
+SDF: dieze | prcent | dollar | ecom
 ;
 /*========CondIF==========*/
 CondIF: mc_IF '(' condition ')' PartieCode else 
 ;
-else : mc_ELSE PartieCode mc_END  CondIF PartieCode |mc_END CondIF PartieCode | mc_ELSE PartieCode mc_END | mc_END
+else : mc_ELSE PartieCode mc_END PartieCode |mc_END PartieCode
 ;
-condition: idf OprComparaison idf
+condition: '(' condition2 ')' OprLogique '(' condition2 ')' | mc_NOT '(' condition2 ')'|  condition2 
+;
+condition2: Expression OprComparaison Expression 
+;
+OprLogique: mc_AND | mc_OR
 ;
 OprComparaison: mc_G | mc_DI | mc_EQ | mc_L |mc_LE | mc_GE
 ;
 /*========Boucle==========*/
-Boucle: mc_FOR '(' idf ':' PAS ':' CondArret ')' PartieCode mc_END Boucle PartieCode | mc_FOR '(' idf ':' PAS ':' CondArret ')' PartieCode mc_END
+Boucle: mc_FOR '(' idf ':' PAS ':' CondArret ')' PartieCode mc_END PartieCode
 ;
 PAS:valint
 ;
@@ -69,4 +73,5 @@ CondArret:idf
 main()
 {
 yyparse();
+afficher();
 }
