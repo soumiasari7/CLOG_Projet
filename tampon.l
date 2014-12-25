@@ -134,12 +134,12 @@ NOT {inserer(yytext,"mc_NOT"); return mc_NOT;}
 IF {inserer(yytext,"mc_IF"); return mc_IF;}
 ELSE {inserer(yytext,"mc_ELSE"); return mc_ELSE;}
 END {inserer(yytext,"mc_END"); return mc_END;}
-INTEGER {inserer(yytext,"mc_INTEGER"); return mc_INTEGER; }
-FLOAT {inserer(yytext,"mc_FLOAT"); return mc_FLOAT;}
-CHAR {inserer(yytext,"mc_CHAR"); return mc_CHAR;}
-STRING {inserer(yytext,"mc_STRING"); return mc_STRING;}
-VECTOR {inserer(yytext,"mc_VECTOR"); return mc_VECTOR;}
-CONST {inserer(yytext,"mc_CONST"); return mc_CONST;}
+INTEGER {yylval.str=strdup(yytext); inserer(yytext,"mc_INTEGER"); return mc_INTEGER; }
+FLOAT {yylval.str=strdup(yytext); inserer(yytext,"mc_FLOAT"); return mc_FLOAT;}
+CHAR {yylval.str=strdup(yytext); inserer(yytext,"mc_CHAR"); return mc_CHAR;}
+STRING {yylval.str=strdup(yytext); inserer(yytext,"mc_STRING"); return mc_STRING;}
+VECTOR {yylval.str=strdup(yytext); inserer(yytext,"mc_VECTOR"); return mc_VECTOR;}
+CONST {yylval.str=strdup(yytext); inserer(yytext,"mc_CONST"); return mc_CONST;}
 READ {inserer(yytext,"mc_READ"); return mc_READ;}
 DISPLAY {inserer(yytext,"mc_DISPLAY"); return mc_DISPLAY;}
 FOR {inserer(yytext,"mc_FOR"); return mc_FOR;}
