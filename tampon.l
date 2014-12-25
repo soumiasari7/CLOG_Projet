@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tampon.tab.h"
-int nb_ligne=1; 
+extern YYSTYPE yylval;
+extern int nb_ligne; 
 
 /*====déclaration d'une structure de donnée pour la table de symbole====*/
 typedef struct
@@ -65,7 +66,7 @@ printf("\t|%26s |%28s  |%27s   |---------------------------- |\n",ts[i].NomEntit
 }
 else
 {
-printf("\t|%26s |%28s  |%27s   | %5d\t|\n",ts[i].NomEntite,ts[i].CodeEntite,ts[i].TypeEntite,ts[i].ValEntite);
+printf("\t|%26s |%28s  |%27s   | %27d\t|\n",ts[i].NomEntite,ts[i].CodeEntite,ts[i].TypeEntite,ts[i].ValEntite);
  }
 i++;
 }
@@ -107,6 +108,18 @@ int posEntite=recherche(entite);
 
 return ts[posEntite].ValEntite;
 }
+/*===================Les routines sémantiques========================*/
+
+int doubleDeclaration (char entite[])
+{
+int posEntite=recherche(entite);
+
+//printf ("\nposi %d\n",posEntite);
+if (strcmp(ts[posEntite].TypeEntite,"")==0) return 1;  // j'ai pas trouvé le type associé à l'entité dans le table de symbole et donc elle est pas encore déclarée
+else return 0; // le type de l'entité existe dejà dans la TS et donc c'est une double déclaration
+
+}
+
 %}
 /*==========================================================Partie Règle ======================================================================*/  
 chiffre0[0-9]
@@ -145,7 +158,7 @@ DISPLAY {inserer(yytext,"mc_DISPLAY"); return mc_DISPLAY;}
 FOR {inserer(yytext,"mc_FOR"); return mc_FOR;}
 
 
-{idf} {if (yyleng<=8) {inserer(yytext,"IDF");return idf; }
+{idf} {if (yyleng<=8) { yylval.str=strdup(yytext); inserer(yytext,"IDF");return idf; }
        else {printf("Erreur lexical:IDF trop long ---> ");ECHO;
 	      printf("\n");
 	     }
@@ -157,7 +170,7 @@ FOR {inserer(yytext,"mc_FOR"); return mc_FOR;}
 	         printf("\n");
 	       }
          }
-{valint} {if((atoi(yytext)<=32767)&&(atoi(yytext)>=-32768)) {inserer(yytext,"valeur int");return valint; }
+{valint} {if((atoi(yytext)<=32767)&&(atoi(yytext)>=-32768)) {yylval.num=atoi(yytext);inserer(yytext,"valeur int");return valint; }
           else{ printf("Erreur Lexical: valeur entière erronée ---> ");ECHO;
 	         printf("\n");
 	       }
