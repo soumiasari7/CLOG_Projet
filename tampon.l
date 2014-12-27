@@ -193,5 +193,6 @@ FOR {inserer(yytext,"mc_FOR"); return mc_FOR;}
 "@" return yytext[0] ;
 "\"" return yytext[0] ;
 {affect} {inserer(yytext,strdup(yytext)); return affectaion;}
-[ \t\n]       
+[ \t]
+\n {nb_ligne++;}
 . printf("erreur lexicale :entité non reconnu");
