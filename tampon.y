@@ -3,14 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 char suavType [30];
-int nb_ligne=1;
 %}
 %union {
 int num;
 char* str;
    }
 %left '+' '*' '-' '/'
-%token dollar dieze ecom prcent mc_IF mc_ELSE mc_END mc_G mc_L mc_GE mc_LE mc_EQ mc_DI mc_NOT mc_AND mc_OR <str>idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST mc_READ mc_DISPLAY mc_FOR valreal <num>valint valints valchar valstr  affectaion '(' ')' '*' '/' '-' '+' '{' '}' '[' ']' ';' ':' '|' ',' '$' '%' '#' '&' '@' '"'  
+%token dollar dieze ecom prcent mc_IF mc_ELSE mc_END mc_G mc_L mc_GE mc_LE mc_EQ mc_DI mc_NOT mc_AND mc_OR <str>idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST mc_READ mc_DISPLAY mc_FOR 
+%token valreal <num>valint valints valchar valstr  
+%token affectaion '(' ')' '*' '/' '-' '+' '{' '}' '[' ']' ';' ':' '|' ',' '$' '%' '#' '&' '@' '"' 
+%type <>Expression
+%type <>Valeur
 %%
 s:idf '{' '{' ListeDeDeclaration '}' '{' PartieCode '}' '}' { printf ("programme syntaxiquement juste"); YYACCEPT;}
 ;
@@ -50,15 +53,13 @@ PartieCode : Affectation | ES | CondIF | Boucle |
 /*========Affectation==========*/
 Affectation:idf affectaion Expression ';' PartieCode 
 ;
-Expression: Somme Soust
-;
-Soust:'+' Somme Soust|'-' Somme Soust|
-;
-Somme:Div Mul
-;
-Mul:'*' Div Mul |'/' Div Mul|
-;
-Div:'('Expression ')' | Valeur
+Expression:Valeur { $$=$1; }
+          | Expression '+' Expression { $$=$1+$3; }
+          | Expression '-' Expression { $$=$1-$3; }
+          | Expression '*' Expression { $$=$1-$3; }
+          | Expression '/' Expression { if ($3==0){printf("erreur Sémantique: div par zero à la ligne %d\n", nb_ligne);}
+            else $$=$1/$3; }
+          | '(' Expression ')' {$$ = $2;}
 ;
 /*========ES==========*/
 ES: Entree PartieCode| Sortie PartieCode  
