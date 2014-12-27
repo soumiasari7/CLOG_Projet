@@ -13,7 +13,7 @@ char* str;
 %token valreal <num>valint valints valchar valstr  
 %token affectaion '(' ')' '*' '/' '-' '+' '{' '}' '[' ']' ';' ':' '|' ',' '$' '%' '#' '&' '@' '"' 
 %type <>Expression
-%type <>Valeur
+%type <>Valeur 
 %%
 s:idf '{' '{' ListeDeDeclaration '}' '{' PartieCode '}' '}' { printf ("programme syntaxiquement juste"); YYACCEPT;}
 ;
