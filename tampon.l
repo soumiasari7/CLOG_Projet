@@ -119,6 +119,15 @@ if (strcmp(ts[posEntite].TypeEntite,"")==0) return 1;  // j'ai pas trouvé le ty
 else return 0; // le type de l'entité existe dejà dans la TS et donc c'est une double déclaration
 
 }
+int nonDeclaration (char entite[])
+{
+int posEntite=recherche(entite);
+if (strcmp(ts[posEntite].TypeEntite,"")==0) 
+return 0;  
+
+
+}
+
 
 %}
 /*==========================================================Partie Règle ======================================================================*/  
@@ -193,6 +202,6 @@ FOR {inserer(yytext,"mc_FOR"); return mc_FOR;}
 "@" return yytext[0] ;
 "\"" return yytext[0] ;
 {affect} {inserer(yytext,strdup(yytext)); return affectaion;}
-[ \t]
 \n {nb_ligne++;}
+[ \t]       
 . printf("erreur lexicale :entité non reconnu");
