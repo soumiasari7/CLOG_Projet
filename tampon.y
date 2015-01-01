@@ -4,12 +4,14 @@
 #include <string.h>
 char suavType [30];
 int nb_ligne=1;
+int nb_col=1;
 %}
 %union {
 int num;
 char* str;
    }
-%left '+' '*' '-' '/'
+%left '+' '-'
+%left '*' '/'
 %token dollar dieze ecom prcent mc_IF mc_ELSE mc_END mc_G mc_L mc_GE mc_LE mc_EQ mc_DI mc_NOT mc_AND mc_OR <str>idf mc_INTEGER mc_STRING mc_FLOAT mc_CHAR mc_VECTOR mc_CONST mc_READ mc_DISPLAY mc_FOR 
 %token <num>valreal <num>valint valints valchar valstr  
 %token affectaion '(' ')' '*' '/' '-' '+' '{' '}' '[' ']' ';' ':' '|' ',' '$' '%' '#' '&' '@' '"' 
@@ -23,21 +25,28 @@ ListeDeDeclaration : DeclarationVarSimple| DeclarationTab| DeclarationConst
 ;
 DeclarationVarSimple : TYPE ':' Listeparam ';' DeclarationVarSimple ListeDeDeclaration | TYPE ':' Listeparam ';'
 ;
-Listeparam: Listeparam '|' idf { if (doubleDeclaration($3)==1)insererType($3,suavType);
+Listeparam: Listeparam '|' idf { if (doubleDeclaration($3)==1){insererType($3,suavType); }
                                  else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $3, nb_ligne); }
           | idf  { if ( doubleDeclaration($1)==1)insererType($1,suavType);
-                                 else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $1, nb_ligne);}
+                                 else printf("erreur Sémantique: double déclation de %s, à la ligne %d, colon %d\n", $1, nb_ligne,nb_col);}
 ;
-DeclarationTab: mc_VECTOR ':' TYPE ':' idf '[' idf ',' idf ']' ';' DeclarationTab ListeDeDeclaration { if (doubleDeclaration($5)==1)insererType($5,suavType);
-                                                                                                      else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $5, nb_ligne);}
-								                                                                     { if (doubleDeclaration($7)==1)insererType($7,suavType);
-                                                                                                     else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $7, nb_ligne); }
-								                                                                     { if (doubleDeclaration($9)==1)insererType($9,suavType);
-                                                                                                      else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $9, nb_ligne);}
+DeclarationTab: mc_VECTOR ':' TYPE ':' idf '[' idf ',' idf ']' ';' DeclarationTab ListeDeDeclaration 
+              { if(doubleDeclaration($5)==1){insererType($5,suavType);insereVal($5,retournerVal($5));}
+                 else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $5, nb_ligne);
+			  }
+			  { if (doubleDeclaration($7)==1)insererType($7,suavType);
+                 else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $7, nb_ligne);
+			  }
+			 { if (doubleDeclaration($9)==1)insererType($9,suavType);
+                else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $9, nb_ligne);
+			 }
+			 {if (TabDepassBorn($7,$9)==0) printf("erreur Sémantique: Bornne inf depasseer la taille de %s, à la ligne %d\n",   $5,nb_ligne);
+		     else printf("BRAVO");
+			 }	
               |
 ;
 DeclarationConst: mc_CONST ':' idf affectaion Valeur ';' DeclarationConst ListeDeDeclaration { if (doubleDeclaration($3)==1)insererType($3,suavType);
-                                                                                              else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $3, nb_ligne); }
+ else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $3, nb_ligne); }
                 |
 ;
 TYPE: mc_STRING  {strcpy(suavType,$1); }
@@ -45,7 +54,7 @@ TYPE: mc_STRING  {strcpy(suavType,$1); }
 	| mc_FLOAT   {strcpy(suavType,$1); }
 	| mc_CHAR    {strcpy(suavType,$1); }
 ;
-Valeur: ValeurNum| valchar | valstr |valints |idf 
+Valeur: ValeurNum| valchar | valstr |valints
 ;
 
 ValeurNum : valreal  {$$=$1;}
@@ -56,21 +65,28 @@ PartieCode : Affectation | ES | CondIF | Boucle |
 ;
  
 /*========Affectation==========*/
-Affectation:idf affectaion Expression ';' PartieCode  { if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);}
+Affectation:idf affectaion Expression ';' PartieCode 
+ { if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);}
+ {insereVal($1,$3);}
+|idf affectaion valint ';' PartieCode{insereVal($1,$3);}
+|idf affectaion valchar ';' PartieCode{insereVal($1,$3);}
+|idf affectaion valstr ';' PartieCode{insereVal($1,$3);}
 ;
 Expression:ValeurNum { $$=$1; }
-          |idf { if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);} 
-          | Expression '+' Expression { $$=$1+$3; if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne); 
-		                                          if (nonDeclaration($3)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $3, nb_ligne);}
-          | Expression '-' Expression { $$=$1-$3; if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);
-		                                          if (nonDeclaration($3)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $3, nb_ligne); }
-          | Expression '*' Expression { $$=$1-$3; if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);
-		                                          if (nonDeclaration($3)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $3, nb_ligne);}
-          | Expression '/' Expression { {if ($3==0){ printf("erreur Sémantique: div par zero à la ligne %d\n", nb_ligne);}
-                                        else $$=$1/$3;}
-                                      if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);
-									  if (nonDeclaration($3)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $3, nb_ligne);}
-          | '(' Expression ')' {$$ = $2; if (nonDeclaration($2)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $2, nb_ligne);}
+          |idf {$$=retournerVal($1);if (nonDeclaration($3)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $3, nb_ligne);}
+          | Expression '+' Expression {$$=$1+$3; //  if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);}} 
+                                                // if (nonDeclaration($3)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);
+          | Expression '-' Expression {$$=$1-$3; //  if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);}} 
+                                                // if (nonDeclaration($3)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);} 
+          | Expression '*' Expression {$$=$1*$3; //  if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);}} 
+                                                // if (nonDeclaration($3)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);} 
+          | Expression '/' Expression {if ($3==0) printf("erreur Sémantique: div par zero à la ligne %d,colon: %d\n", nb_ligne,nb_col);
+                                        else $$=$1/$3;
+                                        //  if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);}} 
+                                        // if (nonDeclaration($3)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);
+									  }
+                                     
+          | '(' Expression ')' {$$ = $2;//  if (nonDeclaration($1)==0) printf("erreur Sémantique: Non déclaration de %s, à la ligne %d\n", $1, nb_ligne);}
 ;
 /*========ES==========*/
 ES: Entree PartieCode| Sortie PartieCode  
