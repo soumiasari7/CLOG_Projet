@@ -1,10 +1,35 @@
 %{
+#include <conio.h>
+#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "tampon.tab.h"
 extern YYSTYPE yylval;
 extern int nb_ligne; 
+extern int nb_col; 
+
+void Color(int couleurDuTexte,int couleurDeFond) // fonction d'affichage de couleurs
+{HANDLE H = GetStdHandle(STD_OUTPUT_HANDLE);
+SetConsoleTextAttribute(H,couleurDeFond*16+couleurDuTexte);
+}
+
+/*0 : Noir
+ 1 : Bleu foncé
+ 2 : Vert foncé
+ 3 : Turquoise
+ 4 : Rouge foncé
+ 5 : Violet
+ 6 : Vert caca d'oie
+ 7 : Gris clair 
+ 8 : Gris foncé
+ 9 : Bleu fluo
+ 10 : Vert fluo
+ 11 : Turquoise
+ 12 : Rouge fluo
+ 13 : Violet 2
+ 14 : Jaune
+ 15 : Blanc*/
 
 /*====déclaration d'une structure de donnée pour la table de symbole====*/
 typedef struct
@@ -51,12 +76,15 @@ CpTabSym++;
 /*================une fonction pour afficher la table de symbole==============*/
 void afficher ()
 {
+
 printf("\n                                 /*==============================================================*/\n");
 printf("                                /********************Table des symboles *************************/\n");
 printf("                               /*==============================================================*/\n");
+Color(12,0);
 printf("\t_________________________________________________________________________________________________________________________\n");
 printf("\t|          NomEntite        |         CodeEntite           |         TypeEntite           |          ValeurEntite       |\n");
 printf("\t_________________________________________________________________________________________________________________________\n");
+
 int i=0;
 while(i<CpTabSym)
 {
@@ -124,10 +152,15 @@ int nonDeclaration (char entite[])
 int posEntite=recherche(entite);
 if (strcmp(ts[posEntite].TypeEntite,"")==0) 
 return 0;  
-
+}
+ 
+int TabDepassBorn(char entite[],char entite1[])
+{
+int valEntite=retournerVal(entite);
+int valEntite1=retournerVal(entite1);
+if (valEntite > valEntite1 ) return 0;
 
 }
-
 
 %}
 /*==========================================================Partie Règle ======================================================================*/  
@@ -189,7 +222,7 @@ FOR {inserer(yytext,"mc_FOR"); return mc_FOR;}
 \"&\" {inserer(yytext,strdup(yytext));return ecom;}	 
 \"%\" {inserer(yytext,strdup(yytext));return prcent;}	 
 {varchar} {inserer(yytext,"un caractère"); return valchar;}
-{varstr} {inserer(yytext,"une chaine de caractère");return valstr; }	   
+{varstr} {yylval.str=yytext;inserer(yytext,"une chaine de caractère");return valstr; }	   
 "{" {inserer(yytext,strdup(yytext)); return yytext[0];}
 "}" {inserer(yytext,strdup(yytext)); return yytext[0];}
 "[" {inserer(yytext,strdup(yytext));return yytext[0]; }
@@ -202,6 +235,7 @@ FOR {inserer(yytext,"mc_FOR"); return mc_FOR;}
 "@" return yytext[0] ;
 "\"" return yytext[0] ;
 {affect} {inserer(yytext,strdup(yytext)); return affectaion;}
+[ \t] {nb_col++;}
 \n {nb_ligne++;}
-[ \t]       
+       
 . printf("erreur lexicale :entité non reconnu");
