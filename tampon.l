@@ -1,11 +1,13 @@
 %{
+#include "tampon.tab.h"
+extern YYSTYPE yylval;
 #include <conio.h>
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "tampon.tab.h"
-extern YYSTYPE yylval;
+
+
 extern int nb_ligne; 
 extern int nb_col; 
 
@@ -136,8 +138,30 @@ int posEntite=recherche(entite);
 
 return ts[posEntite].ValEntite;
 }
-/*===================Les routines sémantiques========================*/
 
+const char* returnType (char entite[])
+{
+int posEntite=recherche(entite);
+
+return ts[posEntite].TypeEntite;
+}
+
+/*===================Les routines sémantiques========================*/
+int Form (char entite[]){
+const char* S=returnType(entite);
+if (strcmp(S,"INTEGER")==0) {return 0;}
+if (strcmp(S,"STRING")==0) {return 1;}
+if (strcmp(S,"FLOAT")==0) {return 2;}
+if (strcmp(S,"CHAR")==0) {return 3;}
+}
+int Compatible (char entite1[],char entite[])
+{
+int posEntite=recherche(entite);
+int posEntite1=recherche(entite1);
+
+if (strcmp((ts[posEntite1].TypeEntite),(ts[posEntite].TypeEntite))!=0)
+return 0;
+}
 int doubleDeclaration (char entite[])
 {
 int posEntite=recherche(entite);
@@ -158,6 +182,7 @@ int TabDepassBorn(char entite[],char entite1[])
 {
 int valEntite=retournerVal(entite);
 int valEntite1=retournerVal(entite1);
+printf("valEntite : %d\t valEntite: %d \n",valEntite,valEntite1);
 if (valEntite > valEntite1 ) return 0;
 
 }
@@ -172,10 +197,14 @@ valrel ({chiffre1}{chiffre0}*|0)"."({chiffre0}*)
 valrels "(-"({chiffre1}{chiffre0}*|0)"."({chiffre0}*)")"
 varchar '.'
 varstr \"(.)*\"
+varstrdo \"(.)*\$\"
+varstrpr \"(.)*%\"
+varstrdz \"(.)*#\"
+varstrecm \"(.)*&\"
 affect =
 idf [A-Z]([a-z]|{chiffre0})*
 oparth [-+*/]
-
+com "//"(.)*
 %%
 G {inserer(yytext,"mc_G"); return mc_G;}
 L {inserer(yytext,"mc_L"); return mc_L;}
@@ -221,8 +250,15 @@ FOR {inserer(yytext,"mc_FOR"); return mc_FOR;}
 \"#\" {inserer(yytext,strdup(yytext));return dieze;}	 
 \"&\" {inserer(yytext,strdup(yytext));return ecom;}	 
 \"%\" {inserer(yytext,strdup(yytext));return prcent;}	 
-{varchar} {inserer(yytext,"un caractère"); return valchar;}
-{varstr} {yylval.str=yytext;inserer(yytext,"une chaine de caractère");return valstr; }	   
+
+{varchar} {yylval.str=strdup(yytext);(yytext,"un caractère"); return valchar;}
+{com} {yylval.str=strdup(yytext);inserer(yytext,"un commentaire"); }
+{varstrdo} {yylval.str=strdup(yytext);inserer(yytext,"une chaine de caractère");return varstrdo; }
+{varstrpr} {yylval.str=strdup(yytext);inserer(yytext,"une chaine de caractère");return varstrpr; }
+{varstrdz} {yylval.str=strdup(yytext);inserer(yytext,"une chaine de caractère");return varstrdz; }
+{varstrecm} {yylval.str=strdup(yytext);inserer(yytext,"une chaine de caractère");return varstrecm; }
+{varstr} {yylval.str=strdup(yytext);(yytext,"une chaine de caractère");return valstr; }	   
+	   
 "{" {inserer(yytext,strdup(yytext)); return yytext[0];}
 "}" {inserer(yytext,strdup(yytext)); return yytext[0];}
 "[" {inserer(yytext,strdup(yytext));return yytext[0]; }
@@ -235,7 +271,8 @@ FOR {inserer(yytext,"mc_FOR"); return mc_FOR;}
 "@" return yytext[0] ;
 "\"" return yytext[0] ;
 {affect} {inserer(yytext,strdup(yytext)); return affectaion;}
-[ \t] {nb_col++;}
-\n {nb_ligne++;}
+[ ] {nb_col++;}
+[\t]
+\n {nb_ligne++;nb_col=0;}
        
 . printf("erreur lexicale :entité non reconnu");
