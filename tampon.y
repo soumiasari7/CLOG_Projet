@@ -37,7 +37,7 @@ Listeparam: Listeparam '|' idf {
 						if ( doubleDeclaration($1)==1)insererType($1,suavType);
                                  else printf("erreur Sémantique: double déclation de %s, à la ligne %d, colon %d\n", $1, nb_ligne,nb_col);}
 ;
-DeclarationTab: mc_VECTOR ':' TYPE ':' idf '[' idf ',' idf']' ';' DeclarationTab ListeDeDeclaration 
+DeclarationTab: mc_VECTOR ':' TYPE ':' idf '[' ValeurNum ',' ValeurNum ']' ';' DeclarationTab ListeDeDeclaration 
               { {if(doubleDeclaration($5)==1){insererType($5,suavType);}
                  else printf("erreur Sémantique: double déclation de %s, à la ligne %d\n", $5, nb_ligne);}
 			 
