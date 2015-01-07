@@ -178,11 +178,10 @@ if (strcmp(ts[posEntite].TypeEntite,"")==0)
 return 0;  
 }
  
-int TabDepassBorn(char entite[],char entite1[])
+int TabDepassBorn(int valEntite,int valEntite1)
 {
-int valEntite=retournerVal(entite);
-int valEntite1=retournerVal(entite1);
-printf("valEntite : %d\t valEntite: %d \n",valEntite,valEntite1);
+
+//printf("valEntite : %d\t valEntite: %d \n",valEntite,valEntite1);
 if (valEntite > valEntite1 ) return 0;
 
 }
