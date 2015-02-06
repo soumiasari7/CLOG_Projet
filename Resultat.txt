@@ -1,0 +1,63 @@
+erreur Sémantique: double déclation de A1, à la ligne 20
+erreur Sémantique: Bornne inf depasseer la taille de A1, à la ligne 20
+erreur Sémantique: double déclation de A1, à la ligne 20
+erreur Sémantique:  display mal formate, à la ligne 23
+erreur Sémantique:  display mal formate, à la ligne 24
+erreur Sémantique:  display mal formate, à la ligne 25
+erreur Sémantique: mal formate, à la ligne 29
+erreur Sémantique: mal formate, à la ligne 31
+erreur Sémantique: mal formate, à la ligne 32
+erreur Sémantique: Non déclaration de E, à la ligne 36
+erreur Sémantique: Non déclaration de Q, à la ligne 42
+programme syntaxiquement juste
+                                 /*==============================================================*/
+                                /********************Table des symboles *************************/
+                               /*==============================================================*/
+	_________________________________________________________________________________________________________________________
+	|          NomEntite        |         CodeEntite           |         TypeEntite           |          ValeurEntite       |
+	_________________________________________________________________________________________________________________________
+	|                   Program |                         IDF  |                              |---------------------------- |
+	|                         { |                           {  |                              |---------------------------- |
+	|                      //rd |              un commentaire  |                              |---------------------------- |
+	|                   INTEGER |                  mc_INTEGER  |                              |---------------------------- |
+	|                        T1 |                         IDF  |                    INTEGER   |                          50	|
+	|                        T2 |                         IDF  |                    INTEGER   |                         500	|
+	|                         S |                         IDF  |                    INTEGER   |                          10	|
+	|                         A |                         IDF  |                    INTEGER   |                           5	|
+	|                         D |                         IDF  |                    INTEGER   |                           0	|
+	|                        N1 |                         IDF  |                    INTEGER   |                         100	|
+	|                      CHAR |                     mc_CHAR  |                              |---------------------------- |
+	|                         B |                         IDF  |                       CHAR   |                           0	|
+	|                     FLOAT |                    mc_FLOAT  |                              |---------------------------- |
+	|                         W |                         IDF  |                      FLOAT   |                           0	|
+	|                    STRING |                   mc_STRING  |                              |---------------------------- |
+	|                         F |                         IDF  |                     STRING   |                           0	|
+	|                         R |                         IDF  |                     STRING   |                           0	|
+	|                    VECTOR |                   mc_VECTOR  |                              |---------------------------- |
+	|                        A1 |                         IDF  |                       CHAR   |                           0	|
+	|                         [ |                           [  |                              |---------------------------- |
+	|                        10 |                  valeur int  |                              |---------------------------- |
+	|                        50 |                  valeur int  |                              |---------------------------- |
+	|                         ] |                           ]  |                              |---------------------------- |
+	|                       100 |                  valeur int  |                              |---------------------------- |
+	|                        20 |                  valeur int  |                              |---------------------------- |
+	|                         } |                           }  |                              |---------------------------- |
+	|                   DISPLAY |                  mc_DISPLAY  |                              |---------------------------- |
+	|                         ( |                           (  |                              |---------------------------- |
+	|    "la valeur de A est #" |    une chaine de caractère  |                              |---------------------------- |
+	|                         ) |                           )  |                              |---------------------------- |
+	|    "la valeur de A est &" |    une chaine de caractère  |                              |---------------------------- |
+	|    "la valeur de A est %" |    une chaine de caractère  |                              |---------------------------- |
+	|                      READ |                     mc_READ  |                              |---------------------------- |
+	|                       "#" |                         "#"  |                              |---------------------------- |
+	|                       "&" |                         "&"  |                              |---------------------------- |
+	|                       "$" |                         "$"  |                              |---------------------------- |
+	|                       "%" |                         "%"  |                              |---------------------------- |
+	|                         = |                           =  |                              |---------------------------- |
+	|                         5 |                  valeur int  |                              |---------------------------- |
+	|                         Q |                         IDF  |                              |---------------------------- |
+	|                         E |                         IDF  |                              |---------------------------- |
+	|                         + |                           +  |                              |---------------------------- |
+	|                         3 |                  valeur int  |                              |---------------------------- |
+	|                       500 |                  valeur int  |                              |---------------------------- |
+	_________________________________________________________________________________________________________________________

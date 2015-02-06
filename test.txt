@@ -1,0 +1,44 @@
+Program
+{
+    {
+	  //rd
+	   INTEGER:T1;
+	   INTEGER:T2;
+	  INTEGER:S;
+	   INTEGER:A;
+	  INTEGER:D;
+	  INTEGER:N1;
+	  CHAR:B;
+	 FLOAT:W;
+	 STRING:F;
+	 STRING:R;
+	 VECTOR:CHAR:A1[10,50];
+	 VECTOR:CHAR:A1[100,50];
+	 VECTOR:CHAR:A1[20,50];
+    
+	
+	}
+	
+	{ 
+	DISPLAY("la valeur de A est #":B);
+	DISPLAY("la valeur de A est &":A);
+	DISPLAY("la valeur de A est %":A);
+    DISPLAY("la valeur de A est %":W);
+	
+	
+	READ("#":@ A);
+	READ("&":@ B);
+	READ("$":@ B);
+	READ("%":@ A);
+	S=10;
+	A=5;
+	
+	Q=E+3;
+	T1=50;
+	T2=500;
+	N1=100;
+	 
+	 
+	}
+	
+}
